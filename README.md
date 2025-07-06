@@ -2,14 +2,13 @@
 
 A modern, real-time chat application leveraging the power of **React**, **Node.js**, **Express**, **MongoDB**, and **Zustand** for seamless state management. NamasteChat offers a clean, customizable chat experience inspired by today’s top messaging platforms, blending robust real-time features with a highly responsive and intuitive UI.
 
-![NamasteChat Screenshot](https://github.com/Riteshmaurya1/NamasteChat-/blob/main/client/public/Landing%20Page.png)
-## 📸 Screenshots
 
-<p align="center">
-  <img src="https://github.com/Riteshmaurya1/NamasteChat-/blob/main/client/public/Landing%20Page.png" alt="Light mode" width="200"/>
-  <img src="https://placehold.co/300x600?text=Chat+Dark+Mode" alt="Dark mode" width="200"/>
-  <img src="https://placehold.co/300x600?text=Profile+Customization" alt="Profile customization" width="200"/>
-</p>
+## 📸 Screenshots
+![NamasteChat Screenshot](https://github.com/Riteshmaurya1/NamasteChat-/blob/main/client/public/Landing%20Page.png)
+![NamasteChat Screenshot](https://github.com/Riteshmaurya1/NamasteChat-/blob/main/client/public/Chat%20On%20Phone.png)
+![NamasteChat Screenshot](https://github.com/Riteshmaurya1/NamasteChat-/blob/main/client/public/Chat%20Page.png)
+![NamasteChat Screenshot](https://github.com/Riteshmaurya1/NamasteChat-/blob/main/client/public/Profile.png)
+
 
 ---
 
