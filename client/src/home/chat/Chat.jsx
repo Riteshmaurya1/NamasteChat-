@@ -1,13 +1,154 @@
+// // import React, { useContext } from "react";
+// // import MessageBubble from "../../components/MessageBubble";
+// // import useGetMessage from "../../context/useGetMessage";
+// // import Loading from "../../components/Loading";
+// // import { AppContext } from "../../context/AppContext";
+// // import { SearchCheck, SearchCircle, SearchWaves } from "@mynaui/icons-react";
+
+// // // Helper to format date labels safely
+// // function formatDateLabel(dateStr) {
+// //   const msgDate = dateStr ? new Date(dateStr) : null;
+
+// //   if (!msgDate || isNaN(msgDate)) return ""; // Don't show anything
+
+// //   const today = new Date();
+// //   const diffTime = today - msgDate;
+// //   const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+// //   if (diffDays < 1) return "Today";
+// //   if (diffDays < 2) return "Yesterday";
+// //   return msgDate.toLocaleDateString();
+// // }
+
+// // const Chat = () => {
+// //   const { messages, loading } = useGetMessage();
+// //   const myUserId = localStorage.getItem("userId");
+// //   const { wallpaper, bubbleColor, searchInChat } = useContext(AppContext);
+
+// //   if (loading) {
+// //     return <Loading />;
+// //   }
+
+// //   // const safeMessages = Array.isArray(messages) ? messages : [];
+
+// //   const safeMessages = Array.isArray(messages) ? messages : [];
+
+// //   const filteredMessages = searchInChat.trim()
+// //     ? safeMessages.filter((msg) =>
+// //       msg.message?.toLowerCase().includes(searchInChat.toLowerCase())
+// //     )
+// //     : safeMessages;
+
+// //   if (filteredMessages.length === 0) {
+// //     if (searchInChat.trim()) {
+// //       // When user is searching but nothing matches
+// //       return (
+// //         <div className="flex flex-col items-center justify-center w-full min-h-screen">
+// //           <div className="text-6xl animate-bounce text-black">
+// //             <SearchWaves className='text-gray-700 size-8' />
+// //           </div>
+// //           <p className="mt-4 text-xl text-gray-700 font-medium">
+// //             No messages found for "{searchInChat}"
+// //           </p>
+// //         </div>
+// //       );
+// //     } else {
+// //       // No messages at all (new chat)
+// //       return (
+// //         <div className="flex flex-col items-center justify-center w-full min-h-screen">
+// //           <div className="text-6xl animate-bounce">👋</div>
+// //           <p className="mt-4 text-xl text-gray-700 font-medium">
+// //             Say Hii to start the conversation!
+// //           </p>
+// //         </div>
+// //       );
+// //     }
+// //   }
+
+
+// //   // const sortedMessages = [...safeMessages].sort(
+// //   //   (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+// //   // );
+
+// //   let lastDate = null;
+
+// //   return (
+// //     <div
+// //       id="chat-container"
+// //       className="space-y-2 p-2 min-h-screen"
+// //       style={{
+// //         backgroundImage: wallpaper ? `url(${wallpaper})` : "none",
+// //         backgroundSize: "cover",
+// //         backgroundPosition: "center",
+// //         backgroundAttachment: "fixed",
+// //       }}
+// //     >
+// //       {/* {sortedMessages.map((msg) => { */}
+// //       {[...filteredMessages].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)).map((msg) => {
+// //         const rawDate = msg.createdAt;
+// //         const dateObj = rawDate ? new Date(rawDate) : null;
+// //         const isValidDate = dateObj && !isNaN(dateObj);
+
+// //         // check for system messages
+// //         if (
+// //           msg.sender === "system" ||          // example system identifier
+// //           msg.message?.toLowerCase().includes("message sent successfully")
+// //         ) {
+// //           return null; // skip rendering this message
+// //         }
+
+// //         const msgDate = isValidDate ? rawDate.split("T")[0] : null;
+// //         const showDateLabel = msgDate && msgDate !== lastDate;
+
+// //         if (msgDate) lastDate = msgDate;
+
+// //         return (
+// //           <React.Fragment key={msg._id}>
+// //             {showDateLabel && (
+// //               <div className="flex justify-center my-4">
+// //                 <span className="bg-gray-300 text-gray-700 text-xs px-3 py-1 rounded-full">
+// //                   {formatDateLabel(msgDate)}
+// //                 </span>
+// //               </div>
+// //             )}
+// //             <MessageBubble
+// //               text={msg.message}
+// //               time={
+// //                 isValidDate
+// //                   ? dateObj.toLocaleTimeString([], {
+// //                     hour: "2-digit",
+// //                     minute: "2-digit",
+// //                   })
+// //                   : ""
+// //               }
+// //               isSender={msg.sender === myUserId}
+// //               bubbleColor={bubbleColor}
+// //             />
+// //           </React.Fragment>
+// //         );
+// //       })}
+// //     </div>
+// //   );
+// // };
+
+// // export default Chat;
+
+
 // import React, { useContext } from "react";
 // import MessageBubble from "../../components/MessageBubble";
 // import useGetMessage from "../../context/useGetMessage";
 // import Loading from "../../components/Loading";
 // import { AppContext } from "../../context/AppContext";
+// import { SearchWaves } from "@mynaui/icons-react";
+// import useConversation from "../../statemanage/useConversation";
+// import { ArrowLeft } from "lucide-react";
 
-// // Helper to format date labels
 // function formatDateLabel(dateStr) {
+//   const msgDate = dateStr ? new Date(dateStr) : null;
+
+//   if (!msgDate || isNaN(msgDate)) return "";
+
 //   const today = new Date();
-//   const msgDate = new Date(dateStr);
 //   const diffTime = today - msgDate;
 //   const diffDays = diffTime / (1000 * 60 * 60 * 24);
 
@@ -19,145 +160,45 @@
 // const Chat = () => {
 //   const { messages, loading } = useGetMessage();
 //   const myUserId = localStorage.getItem("userId");
-
-//   // Just READ these from context, no setters here
-//   const { wallpaper, bubbleColor } = useContext(AppContext);
-//   console.log(bubbleColor);
-
+//   const { wallpaper, bubbleColor, searchInChat, setSearchInChat } = useContext(AppContext);
+//   const { setSelectedConversation } = useConversation();
+//   const isMobile = window.innerWidth < 768;
 
 //   if (loading) {
 //     return <Loading />;
 //   }
 
-//   if (!messages || (Array.isArray(messages) && messages.length === 0)) {
-//     return (
-//       <div
-//         className="flex flex-col items-center justify-center w-full min-h-screen"
-//       >
-//         <div className="text-6xl animate-bounce">👋</div>
-//         <p className="mt-4 text-xl text-gray-700 font-medium">
-//           Say Hii to start the conversation!
-//         </p>
-//       </div>
-//     );
-//   }
-
-//   if (!Array.isArray(messages)) {
-//     return (
-//       <div className="flex justify-center items-center h-32 text-red-500">
-//         ERROR: Messages is not an array
-//       </div>
-//     );
-//   }
-
-//   // Sort messages by date
-//   const sortedMessages = [...messages].sort(
-//     (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
-//   );
-
-//   let lastDate = null;
-
-//   return (
-//     <div
-//       className="space-y-2 p-2 min-h-screen"
-//       style={{
-//         backgroundImage: wallpaper ? `url(${wallpaper})` : "none",
-//         backgroundSize: "cover",
-//         backgroundPosition: "center",
-//         backgroundAttachment: "fixed",
-//       }}
-//     >
-//       {sortedMessages.map((msg) => {
-//         const msgDate = msg.createdAt.split("T")[0];
-//         const showDateLabel = msgDate !== lastDate;
-//         lastDate = msgDate;
-
-//         return (
-//           <React.Fragment key={msg._id}>
-//             {showDateLabel && (
-//               <div className="flex justify-center my-4">
-//                 <span className="bg-gray-300 text-gray-700 text-xs px-3 py-1 rounded-full">
-//                   {formatDateLabel(msgDate)}
-//                 </span>
-//               </div>
-//             )}
-//             <MessageBubble
-//               text={msg.message}
-//               time={new Date(msg.createdAt).toLocaleTimeString([], {
-//                 hour: "2-digit",
-//                 minute: "2-digit",
-//               })}
-//               isSender={msg.sender === myUserId}
-//               bubbleColor={bubbleColor}
-//             />
-//           </React.Fragment>
-//         );
-//       })}
-//     </div>
-//   );
-// };
-
-// export default Chat;
-
-
-
-// import React, { useContext } from "react";
-// import MessageBubble from "../../components/MessageBubble";
-// import useGetMessage from "../../context/useGetMessage";
-// import Loading from "../../components/Loading";
-// import { AppContext } from "../../context/AppContext";
-
-// // Helper to format date labels
-// function formatDateLabel(dateStr) {
-//   const today = new Date();
-//   const msgDate = new Date(dateStr);
-//   const diffTime = today - msgDate;
-//   const diffDays = diffTime / (1000 * 60 * 60 * 24);
-
-//   if (diffDays < 1) return "Today";
-//   if (diffDays < 2) return "Yesterday";
-//   return msgDate.toLocaleDateString();
-// }
-
-// const Chat = () => {
-//   const { messages, loading } = useGetMessage();
-//   const myUserId = localStorage.getItem("userId");
-//   const { wallpaper, bubbleColor } = useContext(AppContext);
-
-//   if (loading) {
-//     return <Loading />;
-//   }
-
-//   // Fallback safely: if messages undefined/null, show empty state
 //   const safeMessages = Array.isArray(messages) ? messages : [];
 
-//   if (safeMessages.length === 0) {
-//     return (
-//       <div className="flex flex-col items-center justify-center w-full min-h-screen">
-//         <div className="text-6xl animate-bounce">👋</div>
-//         <p className="mt-4 text-xl text-gray-700 font-medium">
-//           Say Hii to start the conversation!
-//         </p>
-//       </div>
-//     );
-//   }
+//   const filteredMessages = searchInChat.trim()
+//     ? safeMessages.filter((msg) =>
+//         msg.message?.toLowerCase().includes(searchInChat.toLowerCase())
+//       )
+//     : safeMessages;
 
-//   // Sort messages by date
-//   const sortedMessages = [...safeMessages].sort(
-//     (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
-//   );
-
-//   const handleSend = async () => {
-//     if (!messages.trim()) return;
-//     await sendMessage(messages);
-//     setNewMessage("");
-
-//     // scroll to bottom if new messages
-//     const chatContainer = document.getElementById("chat-container");
-//     if (chatContainer) {
-//       chatContainer.scrollTop = chatContainer.scrollHeight;
+//   if (filteredMessages.length === 0) {
+//     if (searchInChat.trim()) {
+//       return (
+//         <div className="flex flex-col items-center justify-center w-full min-h-screen">
+//           <div className="text-6xl animate-bounce text-black">
+//             <SearchWaves className='text-gray-700 size-8' />
+//           </div>
+//           <p className="mt-4 text-xl text-gray-700 font-medium">
+//             No messages found for "{searchInChat}"
+//           </p>
+//         </div>
+//       );
+//     } else {
+//       return (
+//         <div className="flex flex-col items-center justify-center w-full min-h-screen">
+//           <div className="text-6xl animate-bounce">👋</div>
+//           <p className="mt-4 text-xl text-gray-700 font-medium">
+//             Say Hii to start the conversation!
+//           </p>
+//         </div>
+//       );
 //     }
-//   };
+//   }
 
 //   let lastDate = null;
 
@@ -171,15 +212,41 @@
 //         backgroundPosition: "center",
 //         backgroundAttachment: "fixed",
 //       }}
+//       onClick={() => {
+//         if (searchInChat) setSearchInChat("");
+//       }}
 //     >
-//       {sortedMessages.map((msg) => {
-//         const msgDate = msg.createdAt.split("T")[0];
-//         // const msgDate = msg.createdAt
-//         //   ? msg.createdAt.split("T")[0]
-//         //   : "Unknown";
+//       {isMobile && (
+//         <div className="p-2 bg-white shadow">
+//           <button
+//             onClick={(e) => {
+//               e.stopPropagation();
+//               setSelectedConversation(null);
+//             }}
+//             className="flex items-center gap-1 text-sm text-blue-500"
+//           >
+//             <ArrowLeft className="w-4 h-4" />
+//             Back to Users
+//           </button>
+//         </div>
+//       )}
 
-//         const showDateLabel = msgDate !== lastDate;
-//         lastDate = msgDate;
+//       {[...filteredMessages].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)).map((msg) => {
+//         const rawDate = msg.createdAt;
+//         const dateObj = rawDate ? new Date(rawDate) : null;
+//         const isValidDate = dateObj && !isNaN(dateObj);
+
+//         if (
+//           msg.sender === "system" ||
+//           msg.message?.toLowerCase().includes("message sent successfully")
+//         ) {
+//           return null;
+//         }
+
+//         const msgDate = isValidDate ? rawDate.split("T")[0] : null;
+//         const showDateLabel = msgDate && msgDate !== lastDate;
+
+//         if (msgDate) lastDate = msgDate;
 
 //         return (
 //           <React.Fragment key={msg._id}>
@@ -192,10 +259,14 @@
 //             )}
 //             <MessageBubble
 //               text={msg.message}
-//               time={new Date(msg.createdAt).toLocaleTimeString([], {
-//                 hour: "2-digit",
-//                 minute: "2-digit",
-//               })}
+//               time={
+//                 isValidDate
+//                   ? dateObj.toLocaleTimeString([], {
+//                       hour: "2-digit",
+//                       minute: "2-digit",
+//                     })
+//                   : ""
+//               }
 //               isSender={msg.sender === myUserId}
 //               bubbleColor={bubbleColor}
 //             />
@@ -209,17 +280,18 @@
 // export default Chat;
 
 
+
 import React, { useContext } from "react";
 import MessageBubble from "../../components/MessageBubble";
 import useGetMessage from "../../context/useGetMessage";
 import Loading from "../../components/Loading";
 import { AppContext } from "../../context/AppContext";
+import { SearchWaves } from "@mynaui/icons-react";
+import useConversation from "../../statemanage/useConversation";
 
-// Helper to format date labels safely
 function formatDateLabel(dateStr) {
   const msgDate = dateStr ? new Date(dateStr) : null;
-
-  if (!msgDate || isNaN(msgDate)) return ""; // Don't show anything
+  if (!msgDate || isNaN(msgDate)) return "";
 
   const today = new Date();
   const diffTime = today - msgDate;
@@ -233,35 +305,47 @@ function formatDateLabel(dateStr) {
 const Chat = () => {
   const { messages, loading } = useGetMessage();
   const myUserId = localStorage.getItem("userId");
-  const { wallpaper, bubbleColor } = useContext(AppContext);
+  const { wallpaper, bubbleColor, searchInChat } = useContext(AppContext);
+  const { selectedConversation, setSelectedConversation } = useConversation();
 
-  if (loading) {
-    return <Loading />;
-  }
+  if (loading) return <Loading />;
 
   const safeMessages = Array.isArray(messages) ? messages : [];
 
-  if (safeMessages.length === 0) {
+  const filteredMessages = searchInChat.trim()
+    ? safeMessages.filter((msg) =>
+        msg.message?.toLowerCase().includes(searchInChat.toLowerCase())
+      )
+    : safeMessages;
+
+  if (filteredMessages.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center w-full min-h-screen">
-        <div className="text-6xl animate-bounce">👋</div>
-        <p className="mt-4 text-xl text-gray-700 font-medium">
-          Say Hii to start the conversation!
-        </p>
+        {searchInChat ? (
+          <>
+            <SearchWaves className="text-gray-700 size-8 animate-bounce" />
+            <p className="mt-4 text-xl text-gray-700 font-medium">
+              No messages found for "{searchInChat}"
+            </p>
+          </>
+        ) : (
+          <>
+            <div className="text-6xl animate-bounce">👋</div>
+            <p className="mt-4 text-xl text-gray-700 font-medium">
+              Say Hii to start the conversation!
+            </p>
+          </>
+        )}
       </div>
     );
   }
-
-  const sortedMessages = [...safeMessages].sort(
-    (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
-  );
 
   let lastDate = null;
 
   return (
     <div
       id="chat-container"
-      className="space-y-2 p-2 min-h-screen"
+      className="space-y-2 p-2 min-h-screen relative"
       style={{
         backgroundImage: wallpaper ? `url(${wallpaper})` : "none",
         backgroundSize: "cover",
@@ -269,49 +353,60 @@ const Chat = () => {
         backgroundAttachment: "fixed",
       }}
     >
-      {sortedMessages.map((msg) => {
-        const rawDate = msg.createdAt;
-        const dateObj = rawDate ? new Date(rawDate) : null;
-        const isValidDate = dateObj && !isNaN(dateObj);
+      {/* ✅ Mobile Back Button */}
+      {selectedConversation && (
+        <div className="md:hidden px-2 pb-2">
+          <button
+            onClick={() => setSelectedConversation(null)}
+            className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 text-black px-4 py-2 rounded-lg shadow"
+          >
+            <span className="text-lg">←</span> Back to Chats
+          </button>
+        </div>
+      )}
 
-        // check for system messages
-        if (
-          msg.sender === "system" ||          // example system identifier
-          msg.message?.toLowerCase().includes("message sent successfully")
-        ) {
-          return null; // skip rendering this message
-        }
+      {[...filteredMessages]
+        .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+        .map((msg) => {
+          const rawDate = msg.createdAt;
+          const dateObj = rawDate ? new Date(rawDate) : null;
+          const isValidDate = dateObj && !isNaN(dateObj);
 
-        const msgDate = isValidDate ? rawDate.split("T")[0] : null;
-        const showDateLabel = msgDate && msgDate !== lastDate;
+          if (
+            msg.sender === "system" ||
+            msg.message?.toLowerCase().includes("message sent successfully")
+          )
+            return null;
 
-        if (msgDate) lastDate = msgDate;
+          const msgDate = isValidDate ? rawDate.split("T")[0] : null;
+          const showDateLabel = msgDate && msgDate !== lastDate;
+          if (msgDate) lastDate = msgDate;
 
-        return (
-          <React.Fragment key={msg._id}>
-            {showDateLabel && (
-              <div className="flex justify-center my-4">
-                <span className="bg-gray-300 text-gray-700 text-xs px-3 py-1 rounded-full">
-                  {formatDateLabel(msgDate)}
-                </span>
-              </div>
-            )}
-            <MessageBubble
-              text={msg.message}
-              time={
-                isValidDate
-                  ? dateObj.toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })
-                  : ""
-              }
-              isSender={msg.sender === myUserId}
-              bubbleColor={bubbleColor}
-            />
-          </React.Fragment>
-        );
-      })}
+          return (
+            <React.Fragment key={msg._id}>
+              {showDateLabel && (
+                <div className="flex justify-center my-4">
+                  <span className="bg-gray-300 text-gray-700 text-xs px-3 py-1 rounded-full">
+                    {formatDateLabel(msgDate)}
+                  </span>
+                </div>
+              )}
+              <MessageBubble
+                text={msg.message}
+                time={
+                  isValidDate
+                    ? dateObj.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : ""
+                }
+                isSender={msg.sender === myUserId}
+                bubbleColor={bubbleColor}
+              />
+            </React.Fragment>
+          );
+        })}
     </div>
   );
 };

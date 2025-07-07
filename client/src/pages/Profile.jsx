@@ -13,6 +13,7 @@ const Profile = () => {
     setWallpaper,
     bubbleColor,
     setBubbleColor,
+    userInfo,
   } = useContext(AppContext);
 
   if (loadingProfile) return (<Loading />);

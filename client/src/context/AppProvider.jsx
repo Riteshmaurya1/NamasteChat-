@@ -9,6 +9,8 @@ export const AppProvider = ({ children }) => {
     const [loadingUsers, setLoadingUsers] = useState(true);
     const [activeChatUser, setActiveChatUser] = useState(null);
     const [profileData, setProfileData] = useState(null);
+    const [isOnline, setIsOnline] = useState(null);
+    const [searchInChat, setSearchInChat] = useState("");
 
     // For the USer Profile
     const [wallpaper, setWallpaper] = useState(localStorage.getItem("chatWallpaper") || "");
@@ -36,7 +38,7 @@ export const AppProvider = ({ children }) => {
                 token: response.data.token,
             });
             localStorage.setItem("userId", response.data.user._id);
-            console.log("This is LoggedIn User :=", response.data.user.name);
+            console.log("This is LoggedIn User :=", userInfo.name);
             navigate("/home");
             toast.success(response.data.message || "Logged In");
         } catch (error) {
@@ -90,7 +92,7 @@ export const AppProvider = ({ children }) => {
         try {
             const response = await axios.get("http://localhost:3000/api/user/profile", { withCredentials: true })
             setProfileData(response.data.profile);
-            log(profileData)
+            console.log(profileData)
         } catch (error) {
             console.error("Failed to fetch users:", error);
             toast.error("Failed to load users");
@@ -118,6 +120,10 @@ export const AppProvider = ({ children }) => {
                 setWallpaper,
                 bubbleColor,
                 setBubbleColor,
+                isOnline,
+                setIsOnline,
+                searchInChat,
+                setSearchInChat,
             }}
         >
             {children}
